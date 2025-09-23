@@ -171,16 +171,16 @@ public class DataManager {
 	@SuppressWarnings("unchecked")
 	public static void updateMaps() throws IOException, ClassNotFoundException
 	{
-		if(savedMapsFile.exists())
-		{
-			FileInputStream fileReader = new FileInputStream(savedMapsFile);
-			ObjectInputStream objectReader = new ObjectInputStream(fileReader);
-
-			savedMaps = (ArrayList<Map>) objectReader.readObject();
-
-			objectReader.close();
+		if (!savedMapsFile.exists()) return;
+		FileInputStream fileReader = new FileInputStream(savedMapsFile);
+		if (fileReader.available() == 0) {
 			fileReader.close();
+			return;
 		}
+		ObjectInputStream objectReader = new ObjectInputStream(fileReader);
+		if (objectReader.available() > 0) savedMaps = (ArrayList<Map>) objectReader.readObject();
+		objectReader.close();
+		fileReader.close();
 	}
 
 	//Creates folders for saved, exported, and other files
@@ -196,6 +196,7 @@ public class DataManager {
 		// Write fields to new configuration file
 		properties.put("preferredExportDirectory", exportsFolder.getAbsolutePath());
 		properties.store(new FileOutputStream(configFile), null);
+		System.out.println("Created AppData folder at " + MapMakerRoot.getAbsolutePath());
 	}
 
 	//Load any existing user configurations
@@ -214,8 +215,7 @@ public class DataManager {
 			}
 		}else {
 			System.out.println("App Data Folder not found. Creating new folders...");
-			try
-			{
+			try {
 				createAppDataFolder();
 			}catch(Exception e)
 			{
