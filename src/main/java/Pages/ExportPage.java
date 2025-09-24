@@ -78,7 +78,10 @@ public class ExportPage extends Page implements ChangeListener
 			public void actionPerformed(ActionEvent e) {
 				//CHANGE TO WORK WITH CHECK BOXES
 				DataManager.updateExportDirectory(saveDirectory.getText());
-				DataManager.export(name.getText(), false, true, true);
+				DataManager.export(name.getText(), 
+									texturePaletteCBox.isSelected(), 
+									widthCBox.isSelected(), 
+									heightCBox.isSelected());
 			}
 		});
 

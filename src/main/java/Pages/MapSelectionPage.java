@@ -193,7 +193,8 @@ public class MapSelectionPage extends Page implements MouseWheelListener, MouseL
 	public void mouseMoved(MouseEvent e)
 	{
 		hoveredIndex = ((e.getX() + (10 * scrollAmount)) / 500);
-		if(hoveredIndex >= DataManager.SavedMaps().length) hoveredIndex = DataManager.SavedMaps().length - 1;
+		Map[] savedMaps = DataManager.SavedMaps();
+		if(hoveredIndex >= savedMaps.length) hoveredIndex = savedMaps.length - 1;
 		repaint();
 	}
 }

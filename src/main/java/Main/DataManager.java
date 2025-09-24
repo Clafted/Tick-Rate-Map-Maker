@@ -49,13 +49,16 @@ public class DataManager {
 	public static Color[] TexturePalette() {
 		Color[] list = new Color[map.texturePalette.size()];
 		map.texturePalette.toArray(list);
-		return list; }
+		return list; 
+	}
+	
 	public static Map[] SavedMaps() 
 	{
 		Map[] mapList = new Map[savedMaps.size()];
 		savedMaps.toArray(mapList);
 		return mapList; 
 	}
+	
 	public static String getExportPath()
 	{
 		try {
@@ -90,11 +93,9 @@ public class DataManager {
 			configFile = new File(MapMakerRoot.getAbsolutePath() + "/config.properties");
 
 			updateConfigurations();
-			try
-			{
+			try{
 				updateMaps();
-			}catch(Exception e)
-			{
+			}catch(Exception e) {
 				e.printStackTrace();
 			}
 
@@ -168,7 +169,6 @@ public class DataManager {
 		else loadDefaultMap();
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void updateMaps() throws IOException, ClassNotFoundException
 	{
 		if (!savedMapsFile.exists()) return;
@@ -178,7 +178,10 @@ public class DataManager {
 			return;
 		}
 		ObjectInputStream objectReader = new ObjectInputStream(fileReader);
-		if (objectReader.available() > 0) savedMaps = (ArrayList<Map>) objectReader.readObject();
+		Object val = objectReader.readObject();
+		if (val != null) {
+			savedMaps = (ArrayList<Map>) val;
+		}
 		objectReader.close();
 		fileReader.close();
 	}
@@ -240,14 +243,13 @@ public class DataManager {
 	public static void saveMap(String name) throws IOException
 	{
 		map.name = name;
-		savedMaps.add(map);
+		if (!savedMaps.contains(map)) savedMaps.add(map);
 		
 		FileOutputStream fOS = new FileOutputStream(savedMapsFile);
 		ObjectOutputStream oOS = new ObjectOutputStream(fOS);
-
+		
 		oOS.writeObject(savedMaps);
 		oOS.close();
-		fOS.close();
 	}
 	
 	//Delete a map stored at the given index
