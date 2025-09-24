@@ -231,11 +231,16 @@ public class DataManager {
 	// Change the directory of the exported Maps
 	public static void updateExportDirectory(String path)
 	{
-		if(configFile.exists() == false) return;
-
-		properties.setProperty("preferredExportDirectory", path);
-
-		try { properties.store(new FileOutputStream(configFile), null); System.out.println("Changed directory to: " + path);}
+		try {
+			File temp = new File(path);
+			if (! (temp.exists() && temp.isDirectory())) return;
+			if(configFile.exists() == false) {
+				properties.setProperty("preferredExportDirectory", path);
+				properties.store(new FileOutputStream(configFile), null);
+			}
+			exportsFolder = temp;
+			System.out.println("Changed directory to: " + path);
+		}
 		catch (IOException e) { e.printStackTrace(); }
 	}
 
